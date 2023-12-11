@@ -10,6 +10,7 @@ MORE_SPEED = pygame.USEREVENT + 1
 FRAMES_PER_SEC = pygame.time.Clock()
 SPEED = 3
 SCORE = 0
+HIGH_SCORE = 0
 
 # Screen information
 SCREEN_WIDTH = 400
@@ -79,7 +80,9 @@ font = pygame.font.Font('freesansbold.ttf', 32)
 
 #Game loop begins
 async def main():
+    global SCORE
     global SPEED
+    global HIGH_SCORE
     while True:
 
         #Event Checker
@@ -93,24 +96,32 @@ async def main():
 
         p1.update()
         e1.move()
-
         text = font.render(str(SCORE), True, "green", "white")
         textRect = text.get_rect()
         textRect.center = (20,20)
+        
+        HIGH_SCORE_text = font.render(str(HIGH_SCORE), True, "green", "white")
+        HIGH_SCORE_textRect = HIGH_SCORE_text.get_rect()
+        HIGH_SCORE_textRect.center = (370, 20)
 
         DISPLAYSURF.fill("white")
+
+        if(checkIfCollision(p1,e1)):
+            print("Game Over")
+            if(SCORE > HIGH_SCORE):
+                HIGH_SCORE = SCORE
+            
+            await asyncio.sleep(2)
+            e1.__init__()
+            p1.__init__()
+            SPEED=0
+            SCORE=0
+
 
         p1.draw(DISPLAYSURF)
         e1.draw(DISPLAYSURF)
         DISPLAYSURF.blit(text, textRect)
-            
-
-        if(checkIfCollision(p1,e1)):
-            print("Game Over")
-            time.sleep(2)
-            pygame.quit()
-            sys.exit()
-        
+        DISPLAYSURF.blit(HIGH_SCORE_text, HIGH_SCORE_textRect)    
 
         pygame.display.update()
         FRAMES_PER_SEC.tick(FPS)
