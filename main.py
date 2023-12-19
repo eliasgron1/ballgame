@@ -1,7 +1,6 @@
 import pygame, sys, random, asyncio, time
 from pygame.locals import *
 
-
 pygame.init()
 
 #Game Variables
@@ -52,16 +51,21 @@ class Player(pygame.sprite.Sprite):
         if self.rect.bottom < SCREEN_HEIGHT:
             if pressed_keys[K_DOWN]:
                 self.rect.move_ip(0,10)
-         
+                     
         if self.rect.left > 0:
               if pressed_keys[K_LEFT]:
                   self.rect.move_ip(-5, 0)
         if self.rect.right < SCREEN_WIDTH:        
               if pressed_keys[K_RIGHT]:
                   self.rect.move_ip(5, 0)
- 
+
+    def finger_move(self,x,y):
+        self.rect.center = (x, y)
+
+        
     def draw(self, surface):
         surface.blit(self.image, self.rect)     
+
 
 p1 = Player() 
 e1 = Enemy()
@@ -83,7 +87,10 @@ async def main():
     global SCORE
     global SPEED
     global HIGH_SCORE
+
     while True:
+        p1.update()
+        e1.move()
 
         #Event Checker
         for event in pygame.event.get():
@@ -94,8 +101,18 @@ async def main():
                 pygame.quit()
                 sys.exit()
 
-        p1.update()
-        e1.move()
+            # For Mobile Devices
+            if event.type == pygame.FINGERDOWN:
+                print("debug:event.type=FINGERDOWN")
+                x = event.x * SCREEN_WIDTH
+                y = event.y * SCREEN_HEIGHT
+                p1.finger_move(x,y)
+
+            if event.type == pygame.FINGERUP:
+                print("debug:event.type=FINGERUP")
+                #fingers.pop(event.finger_id, None)
+
+
         text = font.render(str(SCORE), True, "green", "white")
         textRect = text.get_rect()
         textRect.center = (20,20)
