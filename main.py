@@ -1,15 +1,17 @@
 import pygame, sys, asyncio
 from pygame.locals import *
 
+import defs
+import button
 import menu
 import player
 import enemy
-import defs
 
 pygame.init()
 
-p1 = player.Player() 
-e1 = enemy.Enemy()
+p1 = defs.PLAYER
+e1 = defs.ENEMY 
+
 pygame.time.set_timer(defs.MORE_SPEED, 1000)
 
 #Collision Checker
@@ -21,67 +23,90 @@ def checkIfCollision(p1,e1):
 #Score Counter Font
 font = pygame.font.Font('freesansbold.ttf', 32)
 
+#Settings Button
+gear_img = pygame.image.load('assets/gear.png').convert_alpha()
+settings_button = button.Button(380 ,580, gear_img, 1)
 
-#Game loop begins
+
+
+#Main loop begins
 async def main():
-
-    menu.main()
+    print("starting main")
 
     while True:
 
-        p1.update()
-        e1.move()
+        #Run Menu
+        if(defs.GAME_PAUSED):
+            menu.menu()
+
         
-        #Event Checker
-        for event in pygame.event.get():
-            if event.type == defs.MORE_SPEED:
-                defs.SPEED += 1
-                print(defs.SPEED)
-            if event.type == QUIT:
-                pygame.quit()
-                sys.exit()
-
-            # For Mobile Devices
-            if event.type == pygame.FINGERDOWN:
-                print("debug:event.type=FINGERDOWN")
-                x = event.x * defs.SCREEN_WIDTH
-                y = event.y * defs.SCREEN_HEIGHT
-                p1.finger_move(x,y)
-
-            if event.type == pygame.FINGERUP:
-                print("debug:event.type=FINGERUP")
-                #fingers.pop(event.finger_id, None)
-
-
-        text = font.render(str(defs.SCORE), True, "green", "white")
-        textRect = text.get_rect()
-        textRect.center = (20,20)
-        
-        HIGH_SCORE_text = font.render(str(defs.HIGH_SCORE), True, "green", "white")
-        HIGH_SCORE_textRect = HIGH_SCORE_text.get_rect()
-        HIGH_SCORE_textRect.center = (370, 20)
-
-        defs.DISPLAYSURF.fill("white")
-
-        if(checkIfCollision(p1,e1)):
-            print("Game Over")
-            if(defs.SCORE > defs.HIGH_SCORE):
-                defs.HIGH_SCORE = defs.SCORE
+        #Run Game
+        else:
+            p1.update()
+            e1.move()
             
-            await asyncio.sleep(2)
-            e1.__init__()
-            p1.__init__()
-            defs.SPEED=0
-            defs.SCORE=0
+            
+            #Event Checker
+            for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN:
+                 if event.key == pygame.K_SPACE:
+                     defs.GAME_PAUSED=True
+                if event.type == defs.MORE_SPEED:
+                    defs.SPEED += 1
+                    print(defs.SPEED)
+                if event.type == QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+                # For Mobile Devices
+                if event.type == pygame.FINGERDOWN:
+                    print("debug:event.type=FINGERDOWN")
+                    x = event.x * defs.SCREEN_WIDTH
+                    y = event.y * defs.SCREEN_HEIGHT
+                    p1.finger_move(x,y)
+
+                if event.type == pygame.FINGERUP:
+                    print("debug:event.type=FINGERUP")
+                    #fingers.pop(event.finger_id, None)
 
 
-        p1.draw(defs.DISPLAYSURF)
-        e1.draw(defs.DISPLAYSURF)
-        defs.DISPLAYSURF.blit(text, textRect)
-        defs.DISPLAYSURF.blit(HIGH_SCORE_text, HIGH_SCORE_textRect)    
+            SCORE = font.render(str(defs.SCORE), True, "green", "white")
+            SCORE_rect = SCORE.get_rect()
+            SCORE_rect.center = (20,20)
+            
+            HIGH_SCORE_text = font.render(str(defs.HIGH_SCORE), True, "green", "white")
+            HIGH_SCORE_textRect = HIGH_SCORE_text.get_rect()
+            HIGH_SCORE_textRect.center = (370, 20)
 
-        pygame.display.update()
-        defs.FRAMES_PER_SEC.tick(defs.FPS)
+            defs.DISPLAYSURF.fill("white")
+
+            #Chech for collisision
+            if(checkIfCollision(p1,e1)):
+                print("Game Over")
+                if(defs.SCORE > defs.HIGH_SCORE):
+                    defs.HIGH_SCORE = defs.SCORE
+                
+                #Restart Game
+                await asyncio.sleep(2)
+                e1.__init__()
+                p1.__init__()
+                defs.SPEED=0
+                defs.SCORE=0
+
+            
+            #Draw Content To Screen
+            if settings_button.draw(defs.DISPLAYSURF):
+                defs.GAME_PAUSED = True
+
+            p1.draw(defs.DISPLAYSURF)
+            e1.draw(defs.DISPLAYSURF)
+            defs.DISPLAYSURF.blit(SCORE, SCORE_rect)
+            defs.DISPLAYSURF.blit(HIGH_SCORE_text, HIGH_SCORE_textRect)    
+
+            pygame.display.update()
+            defs.FRAMES_PER_SEC.tick(defs.FPS)
+            
         await asyncio.sleep(0)
+
 
 asyncio.run(main())

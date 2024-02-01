@@ -5,10 +5,19 @@ from pygame import K_UP, K_DOWN, K_LEFT, K_RIGHT
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__() 
-        self.image = pygame.image.load("assets/balls.png")
+        self.set_skin()
         self.rect = self.image.get_rect()
         self.rect.center = (160, 520)
- 
+        print(f"skin set to {defs.CURRENT_SKIN}")
+
+
+    def set_skin(self):
+        if(defs.CURRENT_SKIN=="goku"):
+             self.image = pygame.image.load("assets/goku.png")
+        else:
+            self.image = pygame.image.load("assets/balls.png")
+
+
     def update(self):
         pressed_keys = pygame.key.get_pressed()
         if self.rect.top > 0:
