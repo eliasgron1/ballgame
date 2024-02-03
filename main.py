@@ -4,8 +4,7 @@ from pygame.locals import *
 import defs
 import button
 import menu
-import player
-import enemy
+
 
 pygame.init()
 
@@ -38,6 +37,7 @@ async def main():
         #Run Menu
         if(defs.GAME_PAUSED):
             menu.menu()
+
 
         
         #Run Game

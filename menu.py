@@ -13,15 +13,14 @@ def menu():
     global menu_state
 
     #Load button images
-    resume_img = pygame.image.load("assets/button_resume.png").convert_alpha()
-    skins_img = pygame.image.load("assets/button_options.png").convert_alpha()
-    back_img = pygame.image.load('assets/button_back.png').convert_alpha()
+    resume_img = pygame.image.load("assets/play_button.png").convert_alpha()
+    skins_img = pygame.image.load("assets/skins_button.png").convert_alpha()
+    back_img = pygame.image.load('assets/back_button.png').convert_alpha()
 
     #Create button instances
-    button_pos = (SCREEN_WIDTH / 2) - 100
-    resume_button = button.Button(button_pos, 125, resume_img, 1)
-    skins_button = button.Button(button_pos, 250, skins_img, 1)
-    back_button = button.Button(button_pos, 450, back_img, 1)
+    resume_button = button.Button(50, 525, resume_img, 1)
+    skins_button = button.Button(200, 525, skins_img, 1)
+    back_button = button.Button(125, 10, back_img, 1)
 
     #Skin Selection
     default_skin = pygame.image.load("assets/balls.png").convert_alpha()
