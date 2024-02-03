@@ -87,11 +87,14 @@ async def main():
                     defs.HIGH_SCORE = defs.SCORE
                 
                 #Restart Game
-                await asyncio.sleep(2)
+                defs.GAME_PAUSED=True
+                defs.MENU_STATE="main"
                 e1.__init__()
                 p1.__init__()
                 defs.SPEED=0
                 defs.SCORE=0
+                print(f"skin set to {defs.CURRENT_SKIN}")
+
 
             
             #Draw Content To Screen

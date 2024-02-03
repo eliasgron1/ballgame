@@ -8,12 +8,16 @@ class Player(pygame.sprite.Sprite):
         self.set_skin()
         self.rect = self.image.get_rect()
         self.rect.center = (160, 520)
-        print(f"skin set to {defs.CURRENT_SKIN}")
+
 
 
     def set_skin(self):
         if(defs.CURRENT_SKIN=="goku"):
              self.image = pygame.image.load("assets/goku.png")
+        elif(defs.CURRENT_SKIN=="jager"):
+             self.image = pygame.image.load("assets/jager.png")
+        elif(defs.CURRENT_SKIN=="anvil"):
+             self.image = pygame.image.load("assets/anvil.png")
         else:
             self.image = pygame.image.load("assets/balls.png")
 

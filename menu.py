@@ -7,10 +7,8 @@ SCREEN_WIDTH = defs.SCREEN_WIDTH
 SCREEN_HEIGHT = defs.SCREEN_HEIGHT
 
 #game variables
-menu_state = "main"
 
 def menu():
-    global menu_state
 
     #Load button images
     resume_img = pygame.image.load("assets/play_button.png").convert_alpha()
@@ -25,28 +23,31 @@ def menu():
     #Skin Selection
     default_skin = pygame.image.load("assets/balls.png").convert_alpha()
     goku_skin = pygame.image.load("assets/goku.png").convert_alpha()
+    jager_skin = pygame.image.load("assets/jager.png").convert_alpha()
+    anvil_skin = pygame.image.load("assets/anvil.png").convert_alpha()
 
     #Skin instances for menu
-    default_skin_button = button.Button(100, 100, default_skin, 1)
-    goku_skin_button = button.Button(150, 100, goku_skin, 1)
-
+    default_skin_button = button.Button(50, 100, default_skin, 1)
+    goku_skin_button = button.Button(125, 100, goku_skin, 1)
+    jager_skin_button = button.Button(200, 100, jager_skin, 1)
+    anvil_skin_button = button.Button(275, 100, anvil_skin, 1)
 
     defs.DISPLAYSURF.fill((52, 78, 91))
 
     #check menu state
-    if menu_state == "main":
+    if defs.MENU_STATE == "main":
     #draw pause screen buttons
         if resume_button.draw(defs.DISPLAYSURF):
             defs.GAME_PAUSED = False
         if skins_button.draw(defs.DISPLAYSURF):
-                menu_state = "skins"
+                defs.MENU_STATE = "skins"
 
 
     #check if the skins menu is open
-    if menu_state == "skins":
+    if defs.MENU_STATE == "skins":
         #Draw and check if back button pressed 
         if back_button.draw(defs.DISPLAYSURF):
-                menu_state = "main"
+                defs.MENU_STATE = "main"
         #Draw and check if skin button pressed
         if default_skin_button.draw(defs.DISPLAYSURF):
             defs.CURRENT_SKIN = "default"
@@ -54,7 +55,16 @@ def menu():
         if goku_skin_button.draw(defs.DISPLAYSURF):
             defs.CURRENT_SKIN = "goku"
             defs.GAME_PAUSED=False
-        defs.PLAYER.set_skin()
+        if jager_skin_button.draw(defs.DISPLAYSURF):
+            defs.CURRENT_SKIN = "jager"
+            defs.GAME_PAUSED=False
+        if anvil_skin_button.draw(defs.DISPLAYSURF):
+            defs.CURRENT_SKIN = "anvil"
+            defs.GAME_PAUSED=False
+        defs.ENEMY.__init__()
+        defs.PLAYER.__init__()
+        defs.SPEED=0
+        defs.SCORE=0
 
     #Event Checker
     for event in pygame.event.get():

@@ -13,10 +13,11 @@ HIGH_SCORE = 0
 SCREEN_WIDTH = 400
 SCREEN_HEIGHT = 600
 DISPLAYSURF = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
-pygame.display.set_caption('ball game')
+pygame.display.set_caption('ballgame')
 
 #Pause tracker
 GAME_PAUSED = True
+MENU_STATE = "main"
 
 #Skin Tracker
 CURRENT_SKIN = "default"
